@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Send a notification
+# $1 is the notification title
+# http://apple.stackexchange.com/a/115373/90995
+notify(){
+  notification="display notification with title \"$1\""
+  osascript -e $notification
+}
+
+# Tell Me when commands ends
+# http://stackoverflow.com/a/4181721/2558252
+tm() {
+  eval $(printf "%q " "$@")
+  notify $@
+}
+

@@ -1,4 +1,395 @@
-syntax on
+" Introduction and notes {
+" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
+"
+"                 _             ___
+"                | |           /   |
+"     _ __   ___ | |__   ___  / /| |
+"    | '_ \ / _ \| '_ \ / _ \/ /_| |
+"    | | | | (_) | |_) |  __/\___  |
+"    |_| |_|\___/|_.__/ \___|    |_/
+"
+"    Personnal vimrc of Victor Haffreingue
+"    Use it and share it as you like.
+"
+"    Copyright (C) 2015, Victor Haffreingue
+"
+"    Permission is hereby granted, free of charge, to any person obtaining a
+"    copy of this software and associated documentation files (the "Software"),
+"    to deal in the Software without restriction, including without limitation
+"    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+"    and/or sell copies of the Software, and to permit persons to whom the
+"    Software is furnished to do so, subject to the following conditions:
+"
+"    The above copyright notice and this permission notice shall be included in
+"    all copies or substantial portions of the Software.
+"
+"    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+"    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+"    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+"    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+"    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+"    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+"    DEALINGS IN THE SOFTWARE.
+" }
+" Important {
+set nocompatible " be iMproved, required
+let mapleader="\<Space>" " need to set the mapleader before the plugins
+" }
+" Plugins {
+" Vim-Plug Initialisation {
+call plug#begin('~/.vim/plugged')
+" }
+" nobe4 {
+" Plug 'nobe4/did-you-vim'
+" Plug 'nobe4/emmet-show.vim'
+Plug '~/dev/vim/stackovim/'
+" }
+" editorconfig/editorconfig-vim {
+Plug 'editorconfig/editorconfig-vim'
+" }
+" junegunn/goyo.vim {
+Plug 'junegunn/goyo.vim'
+nnoremap <leader>G :Goyo<CR>
+" }
+" reedes/vim-pencil {
+Plug 'reedes/vim-pencil'
+let g:pencil#wrapModeDefault = 'soft'
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd,md call pencil#init()
+  autocmd FileType text            call pencil#init()
+augroup END
+" }
+" bling/vim-airline {
+Plug 'bling/vim-airline'
+set laststatus=2
+let g:airline_powerline_fonts=1
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
+" }
+" morhetz/gruvbox {
+Plug 'morhetz/gruvbox'
+if !has("gui_running")
+  let g:gruvbox_italic=0
+endif
+Plug 'chriskempson/base16-vim'
+" }
+" sheerun/vim-polyglot {
+Plug 'sheerun/vim-polyglot'
+" }
+" edkolev/tmuxline.vim {
+Plug 'edkolev/tmuxline.vim'
+let g:tmuxline_preset = {
+      \ 'a': '#S',
+      \ 'win.dim': '#I',
+      \ 'win': '#W',
+      \ 'cwin.dim': '#I',
+      \ 'cwin': '#W',
+      \ 'x': '#(pmset -g batt | egrep "[0-9]+%.*" -o --colour=auto | cut -f1 -d";" | cut -c2-)',
+      \ 'y': ['%m/%d/%y','%H%M'],
+      \ 'z': '#h',
+      \ 'options': {
+      \'status-justify': 'left'},
+      \ 'win_options': {
+      \'window-status-activity-attr-': 'none'}
+      \}
+" }
+" sjl/gundo.vim {
+Plug 'sjl/gundo.vim', { 'on':  'GundoToggle' }
+nnoremap <leader>u :GundoToggle<CR>
+" }
+" neo {
+Plug 'Shougo/neocomplete'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 
-" Wrap gitcommit file types at the appropriate length
-filetype indent plugin on
+let g:neocomplete#enable_at_startup = 1 " Use neocomplete.
+let g:neocomplete#enable_smart_case = 1 " Use smartcase.
+let g:neocomplete#sources#syntax#min_keyword_length = 3 " Set minimum syntax keyword length.
+
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: "\<TAB>"
+
+" Plug key-mappings.
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+
+" <CR> validate the snippet
+imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
+
+" <TAB> loop through snippet propositions
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <TAB> loop through snippet propositions
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" }
+" scrooloose/syntastic {
+Plug 'scrooloose/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_mode_map = {
+      \ "mode": "passive",
+      \ "active_filetypes": [],
+      \ "passive_filetypes": [] }
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_eruby_ruby_quiet_messages =
+      \ {'regex': 'possibly useless use of \(a variable\|+\|-\|*\|\/\) in void context'}
+" }
+" matchit {
+Plug 'vim-scripts/matchit.zip'
+" }
+" mattn/emmet-vim {
+Plug 'mattn/emmet-vim'
+let g:user_emmet_install_global = 0
+autocmd FileType html,css,less,eruby,jsp,jspf EmmetInstall
+let g:user_emmet_leader_key=','
+" }
+" danro/rename.vim {
+Plug 'danro/rename.vim'
+" }
+" scrooloose/nerdcommenter {
+Plug 'scrooloose/nerdcommenter'
+let NERDSpaceDelims=1
+" }
+" junegunn/vim-easy-align {
+Plug 'junegunn/vim-easy-align'
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+" }
+" kien/ctrlp.vim {
+Plug 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
+" let g:ctrlp_cmd = 'CtrlPLastMode'
+let g:ctrlp_extensions = ['buffertag', 'tag', 'line', 'dir']
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+let g:ctrlp_working_path_mode = 'ra'
+nnoremap <Leader>o :CtrlP<CR>  " use <Leader>o to open a file with ctrlp
+" }
+" gregsexton/gitv{
+Plug 'gregsexton/gitv'
+let g:Gitv_DoNotMapCtrlKey = 1
+" }
+" christoomey/vim-tmux-navigator {
+Plug 'christoomey/vim-tmux-navigator'
+" }
+" plasticboy/vim-markdown {
+Plug 'plasticboy/vim-markdown', { 'for' : ['md', 'markdown']}
+" }
+" tpope/vim-fugitive {
+Plug 'tpope/vim-fugitive'
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gp :Gpush
+nnoremap <Leader>gl :Gpull
+" }
+" tpope/vim-surround {
+Plug 'tpope/vim-surround'
+" }
+" tpope/vim-unimpaired {
+Plug 'tpope/vim-unimpaired'
+" }
+" temporary plugins {
+Plug 'tpope/vim-scriptease'
+" Plug 'scrooloose/nerdtree'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+" }
+" Vim-plug end of Initialisation {
+call plug#end()
+" }
+" The Silver Searcher {
+" if the package is installed
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor\ --column
+  set grepformat=%f:%l:%c%m
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = g:ctrlp_user_command + [ 'ag %s -l -g  --hidden ""' ]
+
+  " disable ctrlp cache
+  let g:ctrlp_use_caching = 0
+
+  " define a new AG command
+  command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  " bind \ (backward slash) to grep shortcut
+  nnoremap \ :Ag<SPACE>
+endif
+" }
+" }
+" Moving around, searching and patterns {
+" move vertically inside wrapping lines
+nnoremap j gj
+" move vertically inside wrapping lines
+nnoremap k gk
+set incsearch "highlight as you type you search phrase
+set ignorecase " ignore case when using a search pattern
+set smartcase  " override 'ignorecase' when pattern has upper case characters
+" }
+" Tags {
+" }
+" Displaying text {
+set number
+set relativenumber
+
+set scroll=10 " Set C-u / C-d scroll
+set list " Show <Tab> as ^I and end-of-line as $
+set listchars=tab:\|\ ,trail:~ " Show tabs and trailing
+set nowrap " long lines wrap
+" }
+" Syntax, highlighting and spelling {
+syntax on " Activate syntax highlighting
+set background=dark
+colorscheme gruvbox
+set t_ut= " Clearing uses the current background color
+set t_Co=256 " Number of available colors
+set cursorline
+" add subtle background color for 80+ characters line
+call matchadd('ColorColumn', '\%81v\%#=1', 100)
+" set cc=+1
+" }
+" Multiple windows {
+set hidden " Allow hidden non-written buffers
+set switchbuf=usetab,newtab
+" }
+" Multiple tab pages {
+" }
+" Terminal {
+" }
+" Using the mouse {
+" }
+" GUI {
+" }
+" Printing {
+" }
+" Messages and info {
+set showcmd " Show (partial) command keys in the status line
+" }
+" Selecting text {
+" }
+" Editing text {
+set textwidth=80
+" }
+" Tabs and indenting {
+set expandtab " Expand <Tab> to spaces in Insert mode
+set tabstop=2 " Number of spaces a <Tab> in the text stands for
+set shiftwidth=2 " Number of spaces used for each step of (auto)indent
+set softtabstop=2 " If non-zero, number of spaces to insert for a <Tab>
+set smarttab " A <Tab> in an indent inserts 'shiftwidth' spaces
+" }
+" Folding {
+set foldenable " Turn on folding
+set foldmethod=syntax
+set foldopen=search,block,hor,mark,percent,quickfix,tag " what movements
+set foldlevelstart=99 " disable auto folding on open
+" }
+" Diff mode {
+" }
+" Mapping {
+" }
+" Reading and writing files {
+" }
+" The swap file {
+" Store swap files in fixed location, not current directory.
+set dir=~/.vim/swapdir//
+" }
+" Command line editing {
+set wildmode=longest,list,full " TODO
+set wildmenu " Command-line completion shows a list of matches
+set undofile " save and restore undo history
+set undodir=~/.vim/undodir  " list of directories for undo files
+" }
+" Executing external commands {
+" }
+" Running make and jumping to errors {
+" }
+" Language specific {
+autocmd! bufreadpost *.gs set syntax=javascript " Google script -> Javascript
+autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+autocmd BufNewFile,BufFilePre,BufRead *.jspf set filetype=jsp
+" }
+" Multi-byte characters {
+scriptencoding=utf-8 " Script encoding
+set encoding=utf-8 " Character encoding
+set fenc=utf-8 " File encoding
+" }
+" Autocmds {
+autocmd! bufwritepost .vimrc source % " Auto Source Vimrc on file save
+" autocmd! bufwritepre * :%s/\s\+$//e " Strip whitespace
+" }
+" Mappings {
+" change paste type
+nnoremap <Leader>pp :set paste!<CR>
+" K move the current line text before the preceding line text
+" nnoremap kk A<CR><ESC>kddkPJ
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+" save file
+nnoremap <Leader>b :b#<CR>
+" save file
+nnoremap <Leader>w :w<CR>
+" source .vimrc
+nnoremap <Leader>sv :so $MYVIMRC
+" quit without saving
+nnoremap <Leader>q :quit!
+" quit after saving
+nnoremap <Leader>x :xit
+" remove the ex mode
+nnoremap Q <NOP>
+" prepare a quick command
+" http://vi.stackexchange.com/a/3136/1821
+nnoremap <Leader>R :nnoremap <lt>Leader>r :
+" reindent document and jump to last position
+nnoremap <leader>= gg=G``
+" force save
+cmap w!! w !sudo tee % >/dev/null
+" quick tabular visual mapping
+vnoremap T :Tab /
+" In insert mode <C-\> remove unwanted <CR> insertion
+inoremap <C-\> <C-o>:left 0<Cr><BS>
+nnoremap <Leader>ev :e ~/.vimrc<CR>
+nnoremap <Leader>k :e .<CR>
+" Before deleting from insert mode, create a new change
+inoremap <c-u> <c-g>u<c-u>
+inoremap <c-w> <c-g>u<c-w>
+" Copy/Paste with system clipboard
+function! CmdPast() abort
+  set paste
+  normal! "+p
+  set nopaste
+endfunction
+nnoremap <Leader>v :call CmdPast()<CR>
+vnoremap <Leader>c "+y<CR>
+
+" execute cmake from command line
+command! -nargs=1 Cmake !cmake "<args>"
+"}
+" Various {
+" Open current file in sublime text
+command! Subl silent execute "!open -a \"Sublime Text 2\" %"
+" }
+" Tests {
+autocmd BufReadPost,FileReadPost,BufNewFile * call system("tmux rename-window 'vim:" . expand("%:t") . "'")
+
+" Display the full path of the current file
+function! DisplayFullPath() abort
+  echo expand('%:p')
+endfunction
+command! FP call DisplayFullPath()
+" }
+
