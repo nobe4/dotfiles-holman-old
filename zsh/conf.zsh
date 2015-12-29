@@ -13,6 +13,10 @@ export LANG=en_US.UTF-8
 # Do not share history accross sessions
 setopt nosharehistory
 
+# Access the functions/* files
+fpath=($ZSH/functions $fpath)
+autoload -U $ZSH/functions/*(:t)
+
 # SSH Config
 
 # Complete ssh
