@@ -6,44 +6,44 @@ _vagrant_check(){
 	vagrantStatus="$(vagrant status 2>&1)"
 	if echo $vagrantStatus | grep -q 'environment' ; then
 		echo 'Not a vagrant environment, exiting ...'
-		return 0
+		return 1
   else
-    return 1
+    return 0
 	fi
 }
 
-_is_vagrant_up(){
+_vagrant_is_up(){
 	vagrantStatus="$(vagrant status 2>&1)"
 	if echo $vagrantStatus | grep -q 'saved\|aborted\|poweroff' ; then
-		return 0
+		return 1
   else
-    return 1
+    return 0
 	fi
 }
 
 # Custom ssh function
 vsh(){
 	# getting all output of the vagrant status command
-	if _vagrant_check; then return; fi
-	if !_is_vagrant_up; then
-		echo '\e[34m[VSH] \e[0mRestoring the machine state ...'
+	if ! _vagrant_check; then return; fi
+	if ! _vagrant_is_up; then
+		echo 'Restoring the machine state ...'
 		vagrant up
 	fi
-	echo '\e[34m[VSH] \e[0mssh to the machine'
+	echo 'ssh to the machine'
 	vagrant ssh
 }
 
 vup(){
-	if _vagrant_check; then return; fi
-	if ! _is_vagrant_up; then
+	if ! _vagrant_check; then return; fi
+	if ! _vagrant_is_up; then
 		vagrant up
 	fi
   notify "Vagrant started"
 }
 
 vhalt(){
-	if _vagrant_check; then return; fi
-	if _is_vagrant_up; then
+	if ! _vagrant_check; then return; fi
+	if _vagrant_is_up; then
 		vagrant halt
 	fi
   notify "Vagrant halted"
