@@ -21,18 +21,6 @@ _vagrant_is_up(){
 	fi
 }
 
-# Custom ssh function
-vsh(){
-	# getting all output of the vagrant status command
-	if ! _vagrant_check; then return; fi
-	if ! _vagrant_is_up; then
-		echo 'Restoring the machine state ...'
-		vagrant up
-	fi
-	echo 'ssh to the machine'
-	vagrant ssh
-}
-
 vup(){
 	if ! _vagrant_check; then return; fi
 	if ! _vagrant_is_up; then
@@ -48,3 +36,9 @@ vhalt(){
 	fi
   notify "Vagrant halted"
 }
+
+vsh(){
+  vup
+	vagrant ssh
+}
+
