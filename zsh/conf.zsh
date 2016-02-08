@@ -31,6 +31,3 @@ zstyle ':completion:*:(ssh|scp|sftp):*' hosts $_ssh_config
 # Run Gstatus at vim startup
 alias vst='vim +Gstatus now'
 
-# osg lib add
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/Users/n4/efrei/M2/PFE/osg/lib
-
