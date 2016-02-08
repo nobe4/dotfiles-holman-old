@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -34,10 +36,7 @@ compinit
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
 do
-  echo $file
   source $file
 done
 
 unset config_files
-
-
