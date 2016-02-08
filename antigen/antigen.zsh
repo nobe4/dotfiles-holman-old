@@ -13,7 +13,7 @@ tmux
 zsh-users/zsh-syntax-highlighting
 EOBUNDLES
 
-antigen theme $HOME/.dotfiles/prompt nope.zsh-theme
+antigen theme $ZSH/prompt nope.zsh-theme
 
 antigen apply
 
