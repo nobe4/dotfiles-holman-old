@@ -95,59 +95,6 @@ let g:tmuxline_preset = {
 Plug 'sjl/gundo.vim', { 'on':  'GundoToggle' }
 nnoremap <leader>u :GundoToggle<CR>
 " }
-" neo {
-Plug 'Shougo/neocomplete'
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
-
-let g:neocomplete#enable_at_startup = 1 " Use neocomplete.
-let g:neocomplete#enable_smart_case = 1 " Use smartcase.
-let g:neocomplete#sources#syntax#min_keyword_length = 3 " Set minimum syntax keyword length.
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)"
-      \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)"
-      \: "\<TAB>"
-
-" Plug key-mappings.
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-
-" <CR> validate the snippet
-imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
-
-" <TAB> loop through snippet propositions
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <TAB> loop through snippet propositions
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-" }
-" scrooloose/syntastic {
-Plug 'scrooloose/syntastic'
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_mode_map = {
-      \ "mode": "passive",
-      \ "active_filetypes": [],
-      \ "passive_filetypes": [] }
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_eruby_ruby_quiet_messages =
-      \ {'regex': 'possibly useless use of \(a variable\|+\|-\|*\|\/\) in void context'}
-" }
 " matchit {
 Plug 'vim-scripts/matchit.zip'
 " }
@@ -168,20 +115,6 @@ let NERDSpaceDelims=1
 Plug 'junegunn/vim-easy-align'
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
-" }
-" kien/ctrlp.vim {
-Plug 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
-" let g:ctrlp_cmd = 'CtrlPLastMode'
-let g:ctrlp_extensions = ['buffertag', 'tag', 'line', 'dir']
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-let g:ctrlp_working_path_mode = 'ra'
-nnoremap <Leader>o :CtrlP<CR>  " use <Leader>o to open a file with ctrlp
-" }
-" gregsexton/gitv{
-Plug 'gregsexton/gitv'
-let g:Gitv_DoNotMapCtrlKey = 1
 " }
 " christoomey/vim-tmux-navigator {
 Plug 'christoomey/vim-tmux-navigator'
