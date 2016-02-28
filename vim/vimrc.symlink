@@ -336,5 +336,28 @@ function! DisplayFullPath() abort
   echo expand('%:p')
 endfunction
 command! FP call DisplayFullPath()
-" }
 
+function! SaveTodo()
+  " Get the file title or generate a new file based on the current date
+  " File title is either the first line if it stats with an #
+  " else it is timestamped
+  let l:filetitle = getline('1')
+  if l:filetitle =~ "^#"
+    " replace all spaces by `-` and remove the `#\s+`
+    let l:filetitle = substitute(l:filetitle, '^#\s\+\|', '', '') " remove starting # and spaces
+    let l:filetitle = substitute(l:filetitle, '\s\+$', '', '') " remove trailing whitespaces
+    let l:filetitle = substitute(l:filetitle, ' ', '-', 'g') " replace in-title spaces by -
+  else
+    let l:filetitle = "todo-".localtime()
+  endif
+
+  " Generate the file name
+  let l:filename = l:filetitle . ".md"
+
+  " Save the file on the desktop
+  execute "w ~/Desktop/".l:filename
+endfunction
+
+" TS is for Todo Save
+command! TS call SaveTodo()
+" }
