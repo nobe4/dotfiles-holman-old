@@ -67,7 +67,7 @@ let g:airline_powerline_fonts=1
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 Plug 'vim-airline/vim-airline-themes'
 " }
-" morhetz/gruvbox {
+" Colors {
 Plug 'morhetz/gruvbox'
 if !has("gui_running")
   let g:gruvbox_italic=0
