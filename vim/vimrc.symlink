@@ -74,9 +74,6 @@ if !has("gui_running")
 endif
 Plug 'chriskempson/base16-vim'
 " }
-" sheerun/vim-polyglot {
-Plug 'sheerun/vim-polyglot'
-" }
 " edkolev/tmuxline.vim {
 Plug 'edkolev/tmuxline.vim'
 let g:tmuxline_preset = {
