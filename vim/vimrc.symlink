@@ -200,7 +200,7 @@ set nowrap " long lines wrap
 " Syntax, highlighting and spelling {
 syntax on " Activate syntax highlighting
 set background=dark
-colorscheme gruvbox
+colorscheme base16-ocean
 set t_ut= " Clearing uses the current background color
 set t_Co=256 " Number of available colors
 set cursorline
