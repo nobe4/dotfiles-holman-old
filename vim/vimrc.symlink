@@ -61,10 +61,11 @@ augroup pencil
 augroup END
 " }
 " bling/vim-airline {
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
+Plug 'vim-airline/vim-airline-themes'
 " }
 " morhetz/gruvbox {
 Plug 'morhetz/gruvbox'
