@@ -42,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 " nobe4 {
 " Plug 'nobe4/did-you-vim'
 " Plug 'nobe4/emmet-show.vim'
-Plug '~/dev/vim/stackovim/'
+ Plug '~/dev/vim/stackovim/'
 " }
 " editorconfig/editorconfig-vim {
 Plug 'editorconfig/editorconfig-vim'
@@ -57,15 +57,14 @@ let g:pencil#wrapModeDefault = 'soft'
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd,md call pencil#init()
-  autocmd FileType text            call pencil#init()
 augroup END
 " }
 " bling/vim-airline {
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
-Plug 'vim-airline/vim-airline-themes'
 " }
 " Colors {
 Plug 'morhetz/gruvbox'
@@ -133,7 +132,6 @@ Plug 'tpope/vim-surround'
 " }
 " Shougo/unite.vim {
 Plug 'Shougo/unite.vim'
-nnoremap <leader>o :<C-u>Unite file_rec/async:!<CR>
 " }
 " Shougo/vimproc.vim {
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
@@ -152,29 +150,33 @@ call plug#end()
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#profile('default', 'context', {
-           \   'start_insert': 1,
-            \   'winheight': 10,
+            \   'prompt': '> ',
+            \   'marked_icon': '-',
+            \   'no_hide_icon': 1,
+            \   'start_insert': 1,
+            \   'auto_resize': 1,
             \   'direction': 'botright',
             \ })
 
-" if executable('ag')
-    " let g:unite_source_rec_async_command = 'ag --nocolor --nogroup --hidden -g ""'
-    " let g:unite_source_grep_command = 'ag'
-    " let g:unite_source_grep_default_opts = '--nocolor --nogroup --hidden'
-    " let g:unite_source_grep_recursive_opt=''
-" endif
+" Custom search program
+if executable('ag')
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_recursive_opt=''
+    let g:unite_source_grep_default_opts =
+                \ '-i --vimgrep --hidden --ignore ' .
+                \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+endif
+
+" Bindings
+nnoremap <leader>o :<C-u>Unite -buffer-name=files file_rec/async<CR>
+nnoremap <Leader>b :<C-u>Unite -buffer-name=buffers buffer<CR>
+nnoremap \ :<C-u>Unite -buffer-name=grep grep:.<CR>
 " }
 " The Silver Searcher {
-" if the package is installed
 if executable('ag')
-  " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor\ --column
   set grepformat=%f:%l:%c%m
-
-  " define a new AG command
-  command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  " bind \ (backward slash) to grep shortcut
-  nnoremap \ :Ag<SPACE>
 endif
 " }
 " }
@@ -253,6 +255,7 @@ set foldlevelstart=99 " disable auto folding on open
 " The swap file {
 " Store swap files in fixed location, not current directory.
 set dir=~/.vim/swapdir//
+set updatecount=10
 " }
 " Command line editing {
 set wildmode=longest,list,full " TODO
@@ -281,49 +284,51 @@ autocmd! bufwritepost .vimrc source % " Auto Source Vimrc on file save
 " Mappings {
 " change paste type
 nnoremap <Leader>pp :set paste!<CR>
-" K move the current line text before the preceding line text
-" nnoremap kk A<CR><ESC>kddkPJ
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-" save file
-nnoremap <Leader>b :b#<CR>
+
+" Explore the file system
+nnoremap <Leader>k :e .<CR>
+
+" edit and source .vimrc
+nnoremap <Leader>ev :e ~/.vimrc<CR>
+nnoremap <Leader>sv :so $MYVIMRC
+
 " save file
 nnoremap <Leader>w :w<CR>
-" source .vimrc
-nnoremap <Leader>sv :so $MYVIMRC
 " quit without saving
 nnoremap <Leader>q :quit!
 " quit after saving
 nnoremap <Leader>x :xit
+
 " remove the ex mode
 nnoremap Q <NOP>
+
 " prepare a quick command
 " http://vi.stackexchange.com/a/3136/1821
 nnoremap <Leader>R :nnoremap <lt>Leader>r :
-" reindent document and jump to last position
-nnoremap <leader>= gg=G``
+
 " force save
 cmap w!! w !sudo tee % >/dev/null
-" quick tabular visual mapping
-vnoremap T :Tab /
+
 " In insert mode <C-\> remove unwanted <CR> insertion
 inoremap <C-\> <C-o>:left 0<Cr><BS>
-nnoremap <Leader>ev :e ~/.vimrc<CR>
-nnoremap <Leader>k :e .<CR>
+
 " Before deleting from insert mode, create a new change
 inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
+
 " Copy/Paste with system clipboard
 function! CmdPast() abort
   set paste
   normal! "+p
   set nopaste
 endfunction
+
 nnoremap <Leader>v :call CmdPast()<CR>
 vnoremap <Leader>c "+y<CR>
 
 " execute cmake from command line
 command! -nargs=1 Cmake !cmake "<args>"
+
 "}
 " Various {
 " Open current file in sublime text
@@ -338,16 +343,18 @@ function! DisplayFullPath() abort
 endfunction
 command! FP call DisplayFullPath()
 
-function! SaveTodo()
+function! TodoSave()
   " Get the file title or generate a new file based on the current date
   " File title is either the first line if it stats with an #
   " else it is timestamped
   let l:filetitle = getline('1')
   if l:filetitle =~ "^#"
     " replace all spaces by `-` and remove the `#\s+`
-    let l:filetitle = substitute(l:filetitle, '^#\s\+\|', '', '') " remove starting # and spaces
-    let l:filetitle = substitute(l:filetitle, '\s\+$', '', '') " remove trailing whitespaces
-    let l:filetitle = substitute(l:filetitle, ' ', '-', 'g') " replace in-title spaces by -
+    let l:filetitle = substitute( substitute( substitute(
+                \ l:filetitle
+                \ , '^#\s\+', '', '')
+                \ , '\s\+$', '', '')
+                \ ,' ', '-', 'g')
   else
     let l:filetitle = "todo-".localtime()
   endif
@@ -358,7 +365,7 @@ function! SaveTodo()
   " Save the file on the desktop
   execute "w ~/Desktop/".l:filename
 endfunction
-
 " TS is for Todo Save
-command! TS call SaveTodo()
+command! TS call TodoSave()
+
 " }
