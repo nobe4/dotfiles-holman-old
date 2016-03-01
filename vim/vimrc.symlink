@@ -143,6 +143,7 @@ Plug 'tpope/vim-unimpaired'
 " }
 " temporary plugins {
 Plug 'tpope/vim-scriptease'
+Plug 'klen/python-mode'
 " }
 " Vim-plug end of Initialisation {
 call plug#end()
