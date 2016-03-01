@@ -251,6 +251,7 @@ set foldlevelstart=99 " disable auto folding on open
 " The swap file {
 " Store swap files in fixed location, not current directory.
 set dir=~/.vim/swapdir//
+set updatecount=10
 " }
 " Command line editing {
 set wildmode=longest,list,full " TODO
@@ -279,49 +280,51 @@ autocmd! bufwritepost .vimrc source % " Auto Source Vimrc on file save
 " Mappings {
 " change paste type
 nnoremap <Leader>pp :set paste!<CR>
-" K move the current line text before the preceding line text
-" nnoremap kk A<CR><ESC>kddkPJ
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-" save file
-nnoremap <Leader>b :b#<CR>
+
+" Explore the file system
+nnoremap <Leader>k :e .<CR>
+
+" edit and source .vimrc
+nnoremap <Leader>ev :e ~/.vimrc<CR>
+nnoremap <Leader>sv :so $MYVIMRC
+
 " save file
 nnoremap <Leader>w :w<CR>
-" source .vimrc
-nnoremap <Leader>sv :so $MYVIMRC
 " quit without saving
 nnoremap <Leader>q :quit!
 " quit after saving
 nnoremap <Leader>x :xit
+
 " remove the ex mode
 nnoremap Q <NOP>
+
 " prepare a quick command
 " http://vi.stackexchange.com/a/3136/1821
 nnoremap <Leader>R :nnoremap <lt>Leader>r :
-" reindent document and jump to last position
-nnoremap <leader>= gg=G``
+
 " force save
 cmap w!! w !sudo tee % >/dev/null
-" quick tabular visual mapping
-vnoremap T :Tab /
+
 " In insert mode <C-\> remove unwanted <CR> insertion
 inoremap <C-\> <C-o>:left 0<Cr><BS>
-nnoremap <Leader>ev :e ~/.vimrc<CR>
-nnoremap <Leader>k :e .<CR>
+
 " Before deleting from insert mode, create a new change
 inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
+
 " Copy/Paste with system clipboard
 function! CmdPast() abort
   set paste
   normal! "+p
   set nopaste
 endfunction
+
 nnoremap <Leader>v :call CmdPast()<CR>
 vnoremap <Leader>c "+y<CR>
 
 " execute cmake from command line
 command! -nargs=1 Cmake !cmake "<args>"
+
 "}
 " Various {
 " Open current file in sublime text
