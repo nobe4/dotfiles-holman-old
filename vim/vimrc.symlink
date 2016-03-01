@@ -101,7 +101,7 @@ Plug 'vim-scripts/matchit.zip'
 " mattn/emmet-vim {
 Plug 'mattn/emmet-vim'
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,less,eruby,jsp,jspf EmmetInstall
+autocmd FileType html,css,less,eruby,jsp,jspf,htmldjango EmmetInstall
 let g:user_emmet_leader_key=','
 " }
 " danro/rename.vim {
