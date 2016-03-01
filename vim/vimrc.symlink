@@ -42,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 " nobe4 {
 " Plug 'nobe4/did-you-vim'
 " Plug 'nobe4/emmet-show.vim'
-Plug '~/dev/vim/stackovim/'
+ Plug '~/dev/vim/stackovim/'
 " }
 " editorconfig/editorconfig-vim {
 Plug 'editorconfig/editorconfig-vim'
@@ -150,7 +150,10 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#profile('default', 'context', {
             \   'prompt': '> ',
+            \   'marked_icon': '-',
+            \   'no_hide_icon': 1,
             \   'start_insert': 1,
+            \   'auto_resize': 1,
             \   'direction': 'botright',
             \ })
 
