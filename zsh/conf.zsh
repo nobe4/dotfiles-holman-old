@@ -31,3 +31,5 @@ zstyle ':completion:*:(ssh|scp|sftp):*' hosts $_ssh_config
 # Run Gstatus at vim startup
 alias vst='vim +Gstatus now'
 
+# Add gruvbox support for osx
+source "$HOME/.vim/plugged/gruvbox/gruvbox_256palette_osx.sh"
