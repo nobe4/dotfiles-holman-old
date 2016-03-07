@@ -157,6 +157,17 @@ call unite#custom#profile('default', 'context', {
             \   'auto_resize': 1,
             \   'direction': 'botright',
             \ })
+call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
+      \ 'ignore_pattern', join([
+      \ '\.git/',
+      \ 'tmp/',
+      \ 'lib/Cake/',
+      \ 'node_modules/',
+      \ 'vendor/',
+      \ 'app_old/',
+      \ 'bower_components/',
+      \ '.sass-cache',
+      \ ], '\|'))
 
 " Custom search program
 if executable('ag')
