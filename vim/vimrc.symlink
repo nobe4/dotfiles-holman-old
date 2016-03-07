@@ -42,36 +42,28 @@ call plug#begin('~/.vim/plugged')
 " nobe4 {
 " Plug 'nobe4/did-you-vim'
 " Plug 'nobe4/emmet-show.vim'
- Plug '~/dev/vim/stackovim/'
+" Plug '~/dev/vim/stackovim/'
+ Plug 'nobe4/gitignore_view/'
 " }
 " editorconfig/editorconfig-vim {
 Plug 'editorconfig/editorconfig-vim'
 " }
 " junegunn/goyo.vim {
-Plug 'junegunn/goyo.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 nnoremap <leader>G :Goyo<CR>
-" }
-" reedes/vim-pencil {
-Plug 'reedes/vim-pencil'
-let g:pencil#wrapModeDefault = 'soft'
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd,md call pencil#init()
-augroup END
 " }
 " bling/vim-airline {
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#format = 2
 set laststatus=2
-let g:airline_powerline_fonts=1
-let g:airline#extensions#whitespace#mixed_indent_algo = 1
 " }
 " Colors {
 Plug 'morhetz/gruvbox'
 if !has("gui_running")
   let g:gruvbox_italic=0
 endif
-Plug 'chriskempson/base16-vim'
 " }
 " edkolev/tmuxline.vim {
 Plug 'edkolev/tmuxline.vim'
@@ -100,20 +92,17 @@ Plug 'vim-scripts/matchit.zip'
 " mattn/emmet-vim {
 Plug 'mattn/emmet-vim'
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,less,eruby,jsp,jspf,htmldjango EmmetInstall
+autocmd FileType html,css,less,
+            \ eruby,jsp,jspf,
+            \ htmldjango EmmetInstall
 let g:user_emmet_leader_key=','
 " }
 " danro/rename.vim {
-Plug 'danro/rename.vim'
+Plug 'danro/rename.vim', { 'on': 'Rename' }
 " }
 " scrooloose/nerdcommenter {
 Plug 'scrooloose/nerdcommenter'
 let NERDSpaceDelims=1
-" }
-" junegunn/vim-easy-align {
-Plug 'junegunn/vim-easy-align'
-vmap <Enter> <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
 " }
 " christoomey/vim-tmux-navigator {
 Plug 'christoomey/vim-tmux-navigator'
@@ -127,6 +116,9 @@ nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gp :Gpush
 nnoremap <Leader>gl :Gpull
 " }
+" tpope/vim-unimpaired {
+Plug 'tpope/vim-unimpaired'
+" }
 " tpope/vim-surround {
 Plug 'tpope/vim-surround'
 " }
@@ -136,12 +128,8 @@ Plug 'Shougo/unite.vim'
 " Shougo/vimproc.vim {
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 " }
-" tpope/vim-unimpaired {
-Plug 'tpope/vim-unimpaired'
-" }
 " temporary plugins {
 Plug 'tpope/vim-scriptease'
-Plug 'klen/python-mode'
 " }
 " Vim-plug end of Initialisation {
 call plug#end()
@@ -214,7 +202,7 @@ set nowrap " long lines wrap
 " Syntax, highlighting and spelling {
 syntax on " Activate syntax highlighting
 set background=dark
-colorscheme base16-ocean
+colorscheme gruvbox
 set t_ut= " Clearing uses the current background color
 set t_Co=256 " Number of available colors
 set cursorline
@@ -289,7 +277,10 @@ set encoding=utf-8 " Character encoding
 set fenc=utf-8 " File encoding
 " }
 " Autocmds {
-autocmd! bufwritepost .vimrc source % " Auto Source Vimrc on file save
+augroup reload_vimrc
+    autocmd!
+    autocmd bufwritepost $MYVIMRC nested source $MYVIMRC
+augroup END
 " autocmd! bufwritepre * :%s/\s\+$//e " Strip whitespace
 " }
 " Mappings {
